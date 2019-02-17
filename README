@@ -6,6 +6,10 @@
  Last Date Modified: Feb 18, 2019
 
  File manifest(name of all files included in this project)
+ 	README
+ 	Makefile
+ 	hexdump.cpp
+ 	hexdump.h
 
  Compile instructions
 
