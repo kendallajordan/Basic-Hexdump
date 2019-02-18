@@ -7,16 +7,24 @@
 #	Last Date Modified: Feb 18, 2019
 ################################################################
 
-xbd: main.o message.o
-	g++ main.o message.o -o xbd
+# Variables
+EXEC = xbd			# Executable file
+CC = g++			# Compiler
+CFLAGS = -c -Wall	# Compiler flags
+					# -c is for compilation, 
+					# -Wall is for most compiler warnings
 
-main.o: main.cpp
-	g++ -c main.cpp
+# Command list
+# Substitute variables into action section using $(VARIABLE_HERE) format
+all: $(EXEC)
 
-message.o: message.cpp message.h
-	g++ -c message.cpp
+$(EXEC): hexdump.o
+	$(CC) hexdump.o -o $(EXEC)
+
+hexdump.o: hexdump.cpp
+	$(CC) $(CFLAGS) hexdump.cpp
 
 clean:
-	rm *.o xbd
+	rm -rf *.o $(EXEC)
 
 ####################### [EOF: Makefile ] #######################
