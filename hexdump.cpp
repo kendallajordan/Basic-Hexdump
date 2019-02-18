@@ -18,21 +18,24 @@
 using namespace std;
 
 /********************************************************************
-Function: void createHeader(void)
+Function: void createHeader(int mode)
 Description: Creates a table header for the file contents.
-Parameters: Input:
+Parameters: Input: int mode, Selects header mode (hex = 1, bin = 2)
 			Output:
 ********************************************************************/
-void createHeader(void){
-	int addressWidth = 9;
-	int valueWidth = 54;
-	int printableWidth = 16;
+void createHeader(int mode){
+	int addressWidth = 12;
+	int hexValueWidth = 41;
+	int binValueWidth = 55;
 	char separator = ' ';
 	char line = '-';
 
-	cout << left << setw(addressWidth) << setfill(separator) << "Address";
-	cout << left << setw(valueWidth) << setfill(separator) << "Data Values";
-	cout << left << setw(printableWidth) << setfill(separator) << "Printable";
+	cout << left << setw(addressWidth) << setfill(separator) << " Address";
+	if(mode == 1)
+		cout << left << setw(hexValueWidth) << setfill(separator) << "Data Values";
+	else
+		cout << left << setw(binValueWidth) << setfill(separator) << "Data Values";
+	cout << "Printable";
 	cout << setw(80) << setfill(line);
 	cout << '\n';
 }
@@ -46,55 +49,57 @@ Parameters: Input: string fileName, The file name of the specified file.
 void toHex(string fileName){
 	ifstream inFile;
 	int address = 0;
-	int nread;
+	int numBytes;
 	char buffer[16];
 
 	/* Open the file. If it cannot open, exit program */
 	inFile.open(fileName, ios::in);
 	if(!inFile){
-		cout << "\nError: Cannot open " << fileName << "\n";
+		cout << "Error: Cannot open " << fileName << "\n";
 		cout << "Exiting program...\n";
 		return;
 	}
 
 	/* Create a header table for the file dump contents */
-	cout << "\nHexdump of " << fileName;
-	createHeader();
+	cout << "\n Hexdump of " << fileName << ":\n\n";
+	createHeader(1);
 
 	/* Dump the file contents */
-	cout << hex << setfill('0');
+	cout << right << hex << setfill('0');
 
 	while(!inFile.eof()){
 		/* Read up to 16 bytes from file each loop and store in buffer */
-		for(nread = 0; nread < 16 && inFile.get(buffer[nread]); nread++);
-		if(nread == 0)
+		for(numBytes = 0; numBytes < 16 && inFile.get(buffer[numBytes]); numBytes++);
+		if(numBytes == 0)
 			break;
 
 		/* Print address in hexadecimal */
+		cout << ' ';
 		cout << setw(8) << address;
-		cout << ":";
+		cout << ":  ";
 
 		/* Print 16 data values as 8 two-byte pairs, in hexadecimal */
 		for(int i = 0; i < 16; i++){
-			if(i % 2 == 0)
-				cout << ' ';
-			if(i < nread)
+			if(i % 2 == 0 && i != 0)
+					cout << ' ';
+			if(i < numBytes)
 				cout << setw(2) << (unsigned)buffer[i];
 			/* Use spaces if final iteration has less than 16 bytes */
 			else
-				cout << ' ';
+				cout << setw(2) << setfill(' ') << ' ';
 		}
 
 		/* Print the printable characters, or a period if unprintable */
-		cout << "  ";
-		for(int i = 0; i < nread; i++){
+		cout << "  |";
+		for(int i = 0; i < numBytes; i++){
 			if(buffer[i] < 32 || buffer[i] > 126)
 				cout << '.';
 			else
 				cout << buffer[i];
 		}
 
-		cout << "\n";
+		/* Update address location */
+		cout << "|\n";
 		address += 16;
 	}
 
@@ -112,55 +117,58 @@ Parameter:	Input: String fileName, The file name of the specified file.
 void toBin(string fileName){
 	ifstream inFile;
 	int address = 0;
-	int nread;
+	int numBytes;
 	char buffer[6];
 
 	/* Open the file. If it cannot open, exit program */
 	inFile.open(fileName, ios::in);
 	if(!inFile){
-		cout << "\nError: Cannot open " << fileName << "\n";
+		cout << "Error: Cannot open " << fileName << "\n";
 		cout << "Exiting program...\n";
 		return;
 	}
 
 	/* Create a header table for the file dump contents */
-	cout << "\nBinary dump of " << fileName;
-	createHeader();
+	cout << "\n Binary dump of " << fileName << ":\n\n";
+	createHeader(2);
 
 	/* Dump the file contents */
-	cout << hex << setfill('0');
+	cout << right << hex << setfill('0');
 
 	while(!inFile.eof()){
 		/* Read up to 6 bytes from file each loop and store in buffer */
-		for(nread = 0; nread < 6 && inFile.get(buffer[nread]); nread++);
-		if(nread == 0)
+		for(numBytes = 0; numBytes < 6 && inFile.get(buffer[numBytes]); numBytes++);
+		if(numBytes == 0)
 			break;
 
 		/* Print address in hexadecimal */
+		cout << ' ';
 		cout << setw(8) << address;
-		cout << ": ";
+		cout << ":  ";
 
 		/* Print 6 data values as 8-bit binary octets */
 		for(int i = 0; i < 6; i++){
-			if(i < nread)
+			if(i < numBytes){
 				bitset<8> b(buffer[i]);
 				cout << setw(8) << b;
 				cout << ' ';
+			}
 			/* Use spaces if final iteration has less than 16 bytes */
 			else
-				cout << "         ";
+				cout << setw(9) << setfill(' ') << ' ';
 		}
 
 		/* Print the printable characters, or a period if unprintable */
-		cout << "  ";
-		for(int i = 0; i < nread; i++){
+		cout << " |";
+		for(int i = 0; i < numBytes; i++){
 			if(buffer[i] < 32 || buffer[i] > 126)
 				cout << '.';
 			else
 				cout << buffer[i];
 		}
 
-		cout << "\n";
+		/* Update address location */
+		cout << "|\n";
 		address += 6;
 	}
 
@@ -179,28 +187,32 @@ Parameters:	Input: int argc, The number of command line arguments.
 int main(int argc, char *argv[]){
 	/* If input file not specified, exit program */
 	if (argc <= 1){
-		cout << "\nError: Filename is not specified!\n";
+		cout << "Error: Filename is not specified!\n";
 		cout << "Exiting program...\n";
 	}
 
 	/* Else, if default command, dump the file in ASCII/hex format */
-	else if (argc == 2){
+	else if (argc == 2)
 		toHex(argv[1]);
 
 	/* Else, if -b flag in command, dump the file in binary format */
 	else if (argc == 3){
-		if(argv[1] == "-b")
+		string flag = argv[1];
+		if(flag.compare("-b") == 0)
 			toBin(argv[2]);
 		else{
-			cout <<"\nError: Unrecognized flag!\n";
+			cout <<"Error: Unrecognized flag!\n";
 			cout <<"Exiting program...\n";
 		}
+	}
 
 	/* Else, exit program */
 	else{
-		cout << "\nError: Too many arguments!\n";
+		cout << "Error: Too many arguments!\n";
 		cout << "Exiting program...\n";
 	}
+	
+	cout << "\n";
 	return 0;
 }
 /************************[ EOF: hexdump.cpp ]***********************/

@@ -9,13 +9,15 @@
 #ifndef HEXDUMP_H
 #define HEXDUMP_H
 
+#include <string>
+
 /********************************************************************
-Function: void createHeader(void)
+Function: void createHeader(int mode)
 Description: Creates a table header for the file contents.
-Parameters: Input:
+Parameters: Input: int mode, Selects header mode (hex = 1, bin = 2)
 			Output:
 ********************************************************************/
-void createHeader(void);
+void createHeader(int mode);
 
 /********************************************************************
 Function: void toHex(fileName)
@@ -23,7 +25,7 @@ Description: Dumps the specified file in ASCII/hex format.
 Parameters: Input: string fileName, The file name of the specified file.
 			Output: 
 ********************************************************************/
-void toHex(string fileName);
+void toHex(std::string fileName);
 
 /********************************************************************
 Function: void toBin(fileName)
@@ -31,7 +33,7 @@ Description: Dumps the specified file in binary format.
 Parameter:	Input: String fileName, The file name of the specified file.
 			Output:
 ********************************************************************/
-void toBin(string fileName);
+void toBin(std::string fileName);
 
 #endif
 /*************************[ EOF: hexdump.h ]************************/

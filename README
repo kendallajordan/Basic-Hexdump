@@ -7,7 +7,7 @@
 
  Project Description:
  	This project is a basic hexadecimal file dump program, or 'xbd'.
- 	
+
  	It opens a regular type file (containing binary or text/ASCII content),
  	reads every byte in the file, and writes it's hex-value and printable
  	(human-readable) character to standard output. 
@@ -45,15 +45,29 @@
  	** WARNING - This program was built to only open 
  	regular file types (binary or text/ASCII content). **
 
- List/description of novel/significant design decisions
- 	- 
+ Design decisions:
+ 	- toHex and toBin are identical in structure, with differences
+ 	  in the number of bytes to read and write for each
+ 	  (16 bytes for hex, 6 for binary).
 
- List/description of any extra features/algorithms/functionality you included which were not required
- 	- Included a header table at the start of the hexdump/binary dump to label and identify
- 		the address, data values, and printable character columns.
 
- List/description of all known deficiencies or bugs
- 	-
+ Extra features:
+ 	- Included a function createHeader which creates
+ 	  a header table at the start of the hexdump/binary dump to
+ 	  label and identify the address, data values, and printable character
+ 	  columns.
 
- Lessons Learned
- 	-
+ Known deficiencies or bugs:
+ 	- This program was built to only open regular file types (binary
+ 	  or text/ASCII content). Running other file types will lead to unreadable
+ 	  and incorrect output.
+
+ Lessons Learned:
+ 	- Working on this project has taught me, the developer, the basics of 
+ 	  converting between decimal, hexadecimal, and binary, as well as 
+ 	  address locations of bytes within a file. 
+ 	  
+ 	- Creating a Makefile has also
+ 	  given me better understanding on the assembly of a source file into 
+ 	  an object file and the linkage of object files to produce
+ 	  an executable file.
