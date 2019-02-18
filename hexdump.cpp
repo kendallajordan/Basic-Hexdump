@@ -13,12 +13,9 @@
 #include <fstream>
 #include <string>
 #include <bitset>
+#include "hexdump.h"
 
 using namespace std;
-
-void createHeader(void);
-void toHex(string fileName);
-void toBin(string fileName);
 
 /********************************************************************
 Function: void createHeader(void)
@@ -206,4 +203,4 @@ int main(int argc, char *argv[]){
 	}
 	return 0;
 }
-/*************************[ EOF: main.cpp ]*************************/
+/************************[ EOF: hexdump.cpp ]***********************/
