@@ -5,20 +5,55 @@
  File: README
  Last Date Modified: Feb 18, 2019
 
- File manifest(name of all files included in this project)
+ Project Description:
+ 	This project is a basic hexadecimal file dump program, or 'xbd'.
+ 	
+ 	It opens a regular type file (containing binary or text/ASCII content),
+ 	reads every byte in the file, and writes it's hex-value and printable
+ 	(human-readable) character to standard output. 
+
+ 	Bytes forming non-printable characters shall print a '.' character instead.
+
+ File manifest:
  	README
  	Makefile
  	hexdump.cpp
  	hexdump.h
 
- Compile instructions
+ Compile instructions:
+ 	1) Open the command terminal.
+ 	2) Move into the directory containing all the files of this project.
+ 	3) Run the following command to compile the executable file:
+ 			make
+ 	4) The following object file(s) will now be in the project directory:
+ 			hexdump.o
+ 	5) The following executable file(s) will now be in the project directory:
+ 			xbd
 
- Operating instructions (include any/all command line options/arguments, required inputs, etc.)
+ Operating instructions:
+ 	1) Open the command terminal.
+ 	2) Move into the directory containing all the files of this project.
+ 	3) Run either of the following commands:
+ 			xbd <FILENAME>
+ 			xbd -b <FILENAME>
+ 	4) Replace <FILENAME> with a file from the project directory.
+ 	5) The first command in step 3 will execute a basic hexdump program,
+ 		dumping the specified file in ASCII/hex format.
+ 	6) The second command in step 3 will execute a "binary dump",
+ 		dumping the specified file in binary format.
+
+ 	** WARNING - This program was built to only open 
+ 	regular file types (binary or text/ASCII content). **
 
  List/description of novel/significant design decisions
+ 	- 
 
  List/description of any extra features/algorithms/functionality you included which were not required
+ 	- Included a header table at the start of the hexdump/binary dump to label and identify
+ 		the address, data values, and printable character columns.
 
  List/description of all known deficiencies or bugs
- 
+ 	-
+
  Lessons Learned
+ 	-
