@@ -35,8 +35,8 @@ void createHeader(int mode){
 		cout << left << setw(hexValueWidth) << setfill(separator) << "Data Values";
 	else
 		cout << left << setw(binValueWidth) << setfill(separator) << "Data Values";
-	cout << "Printable";
-	cout << setw(80) << setfill(line);
+	cout << "Printable\n";
+	cout << setw(78) << setfill(line) << "-";
 	cout << '\n';
 }
 
@@ -51,9 +51,17 @@ void toHex(string fileName){
 	int address = 0;
 	int numBytes;
 	char buffer[16];
+	bitset<8> binBuffer[16];
+	int mode = 0;
 
 	/* Open the file. If it cannot open, exit program */
-	inFile.open(fileName, ios::in);
+	if(fileName.find(".bin") != string::npos){
+		inFile.open(fileName, ios::binary);
+		mode = 1;
+	}
+	else
+		inFile.open(fileName, ios::in);
+
 	if(!inFile){
 		cout << "Error: Cannot open " << fileName << "\n";
 		cout << "Exiting program...\n";
@@ -73,20 +81,44 @@ void toHex(string fileName){
 		if(numBytes == 0)
 			break;
 
+		/* If binary file, store bytes in buffer into binBuffer */
+		if(mode == 1){
+			for(int i=0; i < numBytes; i++){
+				bitset<8> b(buffer[i]);
+				binBuffer[i] = b;
+			}
+		}
+
 		/* Print address in hexadecimal */
 		cout << ' ';
 		cout << setw(8) << address;
 		cout << ":  ";
 
 		/* Print 16 data values as 8 two-byte pairs, in hexadecimal */
-		for(int i = 0; i < 16; i++){
-			if(i % 2 == 0 && i != 0)
-					cout << ' ';
-			if(i < numBytes)
-				cout << setw(2) << (unsigned)buffer[i];
-			/* Use spaces if final iteration has less than 16 bytes */
-			else
-				cout << setw(2) << setfill(' ') << ' ';
+		/* For text/ASCII files */
+		if(mode == 0){
+			for(int i = 0; i < 16; i++){
+				if(i % 2 == 0 && i != 0)
+						cout << ' ';
+				if(i < numBytes)
+					cout << setw(2) << (unsigned)buffer[i];
+				/* Use spaces if final iteration has less than 16 bytes */
+				else
+					cout << setw(2) << setfill(' ') << ' ';
+			}
+		}
+		/* For binary files */
+		else{
+			for(int i = 0; i < 16; i++){
+				if(i % 2 == 0 && i != 0)
+						cout << ' ';
+				if(i < numBytes){
+					cout << setw(2) << binBuffer[i].to_ulong();
+				}
+				/* Use spaces if final iteration has less than 16 bytes */
+				else
+					cout << setw(2) << setfill(' ') << ' ';
+			}
 		}
 
 		/* Print the printable characters, or a period if unprintable */
@@ -121,7 +153,11 @@ void toBin(string fileName){
 	char buffer[6];
 
 	/* Open the file. If it cannot open, exit program */
-	inFile.open(fileName, ios::in);
+	if(fileName.find(".bin") != string::npos)
+		inFile.open(fileName, ios::binary);
+	else
+		inFile.open(fileName, ios::in);
+
 	if(!inFile){
 		cout << "Error: Cannot open " << fileName << "\n";
 		cout << "Exiting program...\n";

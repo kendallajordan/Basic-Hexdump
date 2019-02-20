@@ -34,8 +34,8 @@
  	1) Open the command terminal.
  	2) Move into the directory containing all the files of this project.
  	3) Run either of the following commands:
- 			xbd <FILENAME>
- 			xbd -b <FILENAME>
+ 			./xbd <FILENAME>
+ 			./xbd -b <FILENAME>
  	4) Replace <FILENAME> with a file from the project directory.
  	5) The first command in step 3 will execute a basic hexdump program,
  		dumping the specified file in ASCII/hex format.
