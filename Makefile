@@ -1,8 +1,6 @@
 ################################################################
 #	Name: Kendall Jordan
-#	Username: cssc0443
-#	Course: CS530 Spring 2019
-#   Project: Assignment #1: Basic Hexdump Program
+#       Project: Basic Hexdump Program
 #	File: Makefile
 #	Last Date Modified: Feb 18, 2019
 ################################################################
